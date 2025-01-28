@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema base para tu aplicación -->
+    <style name="Base.Theme.TaskAppParalelos" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Color primario -->
+        <item name="colorPrimary">@color/orange_primary</item>
+        <!-- Variación más oscura del color primario -->
+        <item name="colorPrimaryVariant">@color/orange_dark</item>
+        <!-- Color para el texto o íconos sobre el color primario -->
+        <item name="colorOnPrimary">@color/white</item>
+
+    </style>
+
+    <!-- Tema principal de la aplicación -->
+    <style name="Theme.TaskAppParalelos" parent="Base.Theme.TaskAppParalelos" />
+</resources>

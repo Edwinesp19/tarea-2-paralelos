@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:padding="16dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_back"
+        android:contentDescription="Volver"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        :tint="@color/black" />
+
+        <TextView
+            android:id="@+id/tvTaskFormTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nueva tarea"
+            android:fontFamily="@font/figtree_bold"
+            android:textSize="28dp"
+            android:gravity="start"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Task Title -->
+            <EditText
+                android:id="@+id/etTaskTitle"
+                android:layout_width="match_parent"
+                android:layout_height="81dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/input_background"
+                android:hint="Titulo"
+                android:fontFamily="@font/figtree_regular"
+                android:padding="12dp"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Task Description -->
+            <EditText
+                android:id="@+id/etTaskDescription"
+                android:layout_width="match_parent"
+                android:layout_height="188dp"
+                android:layout_marginBottom="12dp"
+                android:textAlignment="textStart"
+                android:background="@drawable/input_background"
+                android:hint="Descripción"
+                android:fontFamily="@font/figtree_regular"
+                android:padding="12dp"
+                android:textSize="18sp" />
+
+            <!-- LinearLayout horizontal para las fechas -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <!-- Date From -->
+                <EditText
+                    android:id="@+id/etTaskDateFrom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:hint="Fecha desde"
+                    android:fontFamily="@font/figtree_regular"
+                    android:padding="12dp"
+                    android:background="@drawable/input_background"
+                    android:focusable="false"
+                    android:textSize="18sp"
+                    android:inputType="date" />
+
+                <!-- Due Date -->
+                <EditText
+                    android:id="@+id/etTaskDueDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:hint="Fecha hasta"
+                    android:fontFamily="@font/figtree_regular"
+                    android:padding="12dp"
+                    android:background="@drawable/input_background"
+                    android:focusable="false"
+                    android:textSize="18sp"
+                    android:inputType="date" />
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/spStatusId"
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/figtree_regular"
+                android:background="@drawable/input_background"
+                 />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Guardar"
+        android:textSize="18sp"
+        android:fontFamily="@font/figtree_bold"
+        android:layout_marginTop="16dp" />
+</LinearLayout>
