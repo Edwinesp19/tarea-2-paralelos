@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "943621295662",
+    "project_id": "taskappparalelos",
+    "storage_bucket": "taskappparalelos.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:943621295662:android:7fcce52ff1cf1ed8e599bf",
+        "android_client_info": {
+          "package_name": "com.example.taskappparalelos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDP_y33bN3THaROIbLKnf4d7r6uLJVOgoE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

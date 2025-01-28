@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -43,6 +44,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("androidx.navigation:navigation-fragment:2.5.3")
     implementation("androidx.navigation:navigation-ui:2.5.3")
+    implementation("com.google.firebase:firebase-messaging:24.1.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -52,4 +54,6 @@ dependencies {
     implementation ("com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+    implementation ("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
+
 }
