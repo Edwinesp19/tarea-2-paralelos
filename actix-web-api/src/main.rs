@@ -293,8 +293,6 @@ async fn main() -> std::io::Result<()> {
         .init();
         
     log::info!("Starting task assignment service");
-    env_logger::init();
-
     let opts = OptsBuilder::new()
         .ip_or_hostname(Some("localhost"))
         .tcp_port(3306)
