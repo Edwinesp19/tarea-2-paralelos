@@ -171,16 +171,7 @@ async fn assign_task(
 }
 
 fn get_connection_string() -> String {
-    let db_user = env::var("DB_USER").expect("DB_USER must be set");
-    let db_password = env::var("DB_PASSWORD").expect("DB_PASSWORD must be set");
-    let db_host = env::var("DB_HOST").expect("DB_HOST must be set");
-    let db_port = env::var("DB_PORT").expect("DB_PORT must be set");
-    let db_name = env::var("DB_NAME").expect("DB_NAME must be set");
-    
-    format!(
-        "mysql://{}:{}@{}:{}/{}",
-        db_user, db_password, db_host, db_port, db_name
-    )
+    env::var("DATABASE_URL").expect("DATABASE_URL must be set")
 }
 
 #[actix_web::main]
@@ -208,7 +199,7 @@ async fn main() -> std::io::Result<()> {
                     )
             )
     })
-    .bind("127.0.0.1:8081")?
+    .bind("0.0.0.0:8081")?
     .run()
     .await
 }

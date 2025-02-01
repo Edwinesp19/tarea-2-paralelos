@@ -1,9 +1,10 @@
-FROM rust:1.75-slim as builder
+FROM rust:latest as builder
 
 WORKDIR /usr/src/app
 COPY . .
 
-RUN cargo build --release
+# Update dependencies and build
+RUN cargo update && cargo build --release
 
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y libssl-dev ca-certificates && rm -rf /var/lib/apt/lists/*
@@ -14,4 +15,3 @@ COPY --from=builder /usr/src/app/.env .
 
 EXPOSE 8081
 CMD ["./actix_web_api"]
-
