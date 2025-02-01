@@ -22,6 +22,12 @@ services:
     environment:
       - DATABASE_URL=mysql://root:@db:3306/rest_db
       - RUST_LOG=info
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=
+      - DB_NAME=rest_db
+      - BIND_ADDRESS=0.0.0.0:8080
   db:
     image: mysql:8.0
     ports:
