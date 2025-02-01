@@ -10,9 +10,13 @@ public class LoginBody {
     @SerializedName("password")
     private String password;
 
-    public LoginBody(String email, String password) {
+    @SerializedName("player_id")
+    private String playerId;
+
+    public LoginBody(String email, String password, String playerId) {
         this.email = email;
         this.password = password;
+        this.playerId = playerId;
     }
 
     public String getEmail() {

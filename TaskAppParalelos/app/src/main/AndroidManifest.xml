@@ -17,6 +17,9 @@
         android:theme="@style/Theme.TaskAppParalelos"
         android:name=".ApplicationClass"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.onesignal.NotificationServiceExtension"
+            android:value="com.onesignal.OneSignalNotificationServiceExtension" />
         <activity
             android:name=".view.ImageActivity"
             android:exported="false" />

@@ -54,6 +54,6 @@ dependencies {
     implementation ("com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
-    implementation ("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
+    implementation ("com.onesignal:OneSignal:4.8.6")
 
 }

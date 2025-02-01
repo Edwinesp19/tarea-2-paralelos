@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
         bLogin = findViewById(R.id.bLogin);
 
 
-        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(MainViewModel.class);
+
 
 
         mViewModel.getProgress().observe(this, new Observer<Integer>() {
