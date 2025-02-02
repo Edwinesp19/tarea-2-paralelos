@@ -610,7 +610,7 @@ async fn login(credentials: web::Json<LoginRequest>, pool: web::Data<Pool>) -> R
                         success: true,
                         message: "Inicio de sesión exitoso".to_string(),
                         user: UserData {
-                            id:user_id
+                            id: user_id,
                             name: db_name,
                             email: db_email,
                         }

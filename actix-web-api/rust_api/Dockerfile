@@ -1,11 +1,11 @@
 # Builder stage
-FROM rust:latest as builder
+FROM --platform=linux/amd64 rust:latest as builder
 WORKDIR /usr/src/app
 COPY . .
 RUN cargo update && cargo build --release
 
 # Runtime stage
-FROM debian:bookworm-slim
+FROM --platform=linux/amd64 debian:bookworm-slim
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
     libssl-dev \
