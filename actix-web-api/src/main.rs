@@ -14,6 +14,11 @@ struct TaskAssignmentRequest {
     user_ids: Vec<i32>
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+struct UpdateTaskStatusRequest {
+    status_id: i64  // Using i64 to match MySQL's BIGINT
+}
+
 #[derive(Debug, Serialize)]
 struct OneSignalNotification {
     app_id: String,
@@ -22,6 +27,112 @@ struct OneSignalNotification {
     include_player_ids: Vec<String>,
     data: HashMap<String, serde_json::Value>,
     url: Option<String>
+}
+
+    async fn update_task_status(
+        pool: web::Data<Pool>,
+        task_id: web::Path<i64>,
+        req: web::Json<UpdateTaskStatusRequest>
+    ) -> Result<HttpResponse> {
+        let task_id = task_id.into_inner();
+        let mut conn = pool.get_conn()
+        .map_err(|e| actix_web::error::ErrorInternalServerError(e.to_string()))?;
+
+    // Start transaction
+    let mut tx = conn.start_transaction(TxOpts::default())
+        .map_err(|e| actix_web::error::ErrorInternalServerError(e.to_string()))?;
+
+    // Validate status exists
+    let status_exists: Option<i64> = tx.exec_first(
+        "SELECT id FROM task_statuses WHERE id = ?",
+        (req.status_id,)
+    ).map_err(|e| actix_web::error::ErrorInternalServerError(e.to_string()))?;
+
+    if status_exists.is_none() {
+        return Ok(HttpResponse::BadRequest().json(serde_json::json!({
+            "success": false,
+            "message": "Estado de tarea inválido"
+        })));
+    }
+
+    // Get task information before update
+    let task_info: Option<(String, String)> = tx.exec_first(
+        "SELECT t.title, ts.name FROM tasks t 
+        INNER JOIN task_statuses ts ON ts.id = ? 
+        WHERE t.id = ?",
+        (req.status_id, task_id)
+    ).map_err(|e| actix_web::error::ErrorInternalServerError(e.to_string()))?;
+
+    let (task_title, new_status) = match task_info {
+        Some(info) => info,
+        None => return Ok(HttpResponse::NotFound().json(serde_json::json!({
+            "success": false,
+            "message": "Tarea no encontrada"
+        })))
+    };
+
+    // Update task status
+    tx.exec_drop(
+        "UPDATE tasks SET status_id = ? WHERE id = ?",
+        (req.status_id, task_id)
+    ).map_err(|e| actix_web::error::ErrorInternalServerError(e.to_string()))?;
+
+    // Get assigned users
+    let assigned_users: Vec<(i64, String, Option<String>)> = tx.exec_map(
+        "SELECT u.id, u.name, d.player_id 
+        FROM users u 
+        INNER JOIN task_assignments ta ON ta.user_id = u.id 
+        LEFT JOIN devices d ON d.user_id = u.id
+        WHERE ta.task_id = ?",
+        (task_id,),
+        |(id, name, player_id)| (id, name, player_id)
+    ).map_err(|e| actix_web::error::ErrorInternalServerError(e.to_string()))?;
+
+    // Commit transaction
+    tx.commit().map_err(|e| actix_web::error::ErrorInternalServerError(e.to_string()))?;
+
+    // Send notifications to assigned users
+    for (_, name, player_id) in assigned_users {
+        if let Some(pid) = player_id {
+            let mut contents = HashMap::new();
+            let mut headings = HashMap::new();
+            let mut data = HashMap::new();
+
+            contents.insert("en".to_string(), 
+                format!("Hola {}, el estado de la tarea '{}' ha cambiado a '{}'", 
+                    name, task_title, new_status));
+            headings.insert("en".to_string(), "Actualización de Tarea".to_string());
+            data.insert("task_id".to_string(), serde_json::json!(task_id));
+
+            let notification = OneSignalNotification {
+                app_id: env::var("ONESIGNAL_APP_ID").expect("ONESIGNAL_APP_ID must be set"),
+                contents,
+                headings,
+                include_player_ids: vec![pid],
+                data,
+                url: None
+            };
+
+            // Send notification asynchronously
+            let client = reqwest::Client::new();
+            let api_key = env::var("ONESIGNAL_REST_API_KEY")
+                .expect("ONESIGNAL_REST_API_KEY must be set");
+            
+            tokio::spawn(async move {
+                let _ = client
+                    .post("https://onesignal.com/api/v1/notifications")
+                    .header("Authorization", format!("Basic {}", api_key))
+                    .json(&notification)
+                    .send()
+                    .await;
+            });
+        }
+    }
+
+    Ok(HttpResponse::Ok().json(serde_json::json!({
+        "success": true,
+        "message": "Estado de tarea actualizado exitosamente"
+    })))
 }
 
 async fn assign_task(
@@ -185,6 +296,7 @@ async fn main() -> std::io::Result<()> {
     log::info!("Starting Task Assignment service at http://127.0.0.1:8081");
     log::info!("Available endpoints:");
     log::info!("  POST /api/taskAssignments/assign - Assign tasks to users and send notifications");
+    log::info!("  PUT /api/taskStatus/<id> - Update task status with notifications");
 
     HttpServer::new(move || {
         App::new()
@@ -196,6 +308,10 @@ async fn main() -> std::io::Result<()> {
                     .service(
                         web::scope("/taskAssignments")
                             .route("/assign", web::post().to(assign_task))
+                    )
+                    .service(
+                        web::resource("/taskStatus/{id}")
+                            .route(web::put().to(update_task_status))
                     )
             )
     })

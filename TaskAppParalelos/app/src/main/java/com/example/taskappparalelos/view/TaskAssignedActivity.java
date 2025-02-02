@@ -61,6 +61,10 @@ public class TaskAssignedActivity extends AppCompatActivity {
         mViewModel.fetchTaskAssignments();
     }
 
+    public void fetchData(){
+        mViewModel.fetchTaskAssignments();
+    }
+
     private void displayAssignments(List<TaskAssignmentsResponse.Assignment> assignments) {
         assignmentContainer.removeAllViews();
 

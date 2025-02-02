@@ -1,6 +1,8 @@
 package com.example.taskappparalelos.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.content.Intent;
@@ -10,6 +12,9 @@ import com.example.taskappparalelos.R;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private static final String PREFS_NAME = "MyPrefs";
+    private static final String USERNAME_KEY = "username";
+
     LinearLayout cardTasks,cardUsers,cardAssign,cardImage;
 
     @Override
@@ -17,6 +22,15 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         String username = getIntent().getStringExtra("username");
+
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        // Intent puede contener el username, si no, lo tomamos de SharedPreferences
+        if (username == null || username.isEmpty()) {
+            username = sharedPreferences.getString(USERNAME_KEY, "Usuario");
+        }
 
         TextView textView = findViewById(R.id.textViewWelcome);
         textView.setText( username);

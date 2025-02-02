@@ -18,8 +18,10 @@ import com.example.taskappparalelos.model.LoginResponse;
 public class MainViewModel extends AndroidViewModel {
     private static final String PREFS_NAME = "MyPrefs";
     private static final String PLAYER_ID_KEY = "player_id";
+    private static final String USERNAME_KEY = "username";
     MutableLiveData<Integer> mProgressMutableData = new MutableLiveData<>();
     MutableLiveData<String> mLoginResultMutableData = new MutableLiveData<>();
+
 
     MainRepository mMainRepository;
     private Application application;
@@ -31,6 +33,7 @@ public class MainViewModel extends AndroidViewModel {
         //inicializar el mProgressMutableDatalogin data
         mProgressMutableData.postValue(View.INVISIBLE);
         mLoginResultMutableData.postValue("Not logged in");
+
         mMainRepository = new MainRepository();
 
         sharedPreferences = application.getSharedPreferences(PREFS_NAME, Application.MODE_PRIVATE);
@@ -46,6 +49,13 @@ public class MainViewModel extends AndroidViewModel {
             @Override
             public void onResponse(LoginResponse loginResponse) {
                 mProgressMutableData.postValue(View.INVISIBLE);
+
+                if (loginResponse != null && loginResponse.getUser().getName() != null) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(USERNAME_KEY, loginResponse.getUser().getName());
+                    editor.apply();
+                }
+
                 mLoginResultMutableData.postValue("Login Success");
             }
 
@@ -55,6 +65,10 @@ public class MainViewModel extends AndroidViewModel {
                 mLoginResultMutableData.postValue("Login failure: " + t.getLocalizedMessage());
             }
         });
+    }
+
+    public String getSavedUsername() {
+        return sharedPreferences.getString(USERNAME_KEY, "Usuario");
     }
 
     public LiveData<String> getLoginResult(){

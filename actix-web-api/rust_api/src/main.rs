@@ -548,6 +548,7 @@ fn is_valid_email(email: &str) -> bool {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct UserData {
+    id: i32,
     name: String,
     email: String,
 }
@@ -609,6 +610,7 @@ async fn login(credentials: web::Json<LoginRequest>, pool: web::Data<Pool>) -> R
                         success: true,
                         message: "Inicio de sesión exitoso".to_string(),
                         user: UserData {
+                            id:user_id
                             name: db_name,
                             email: db_email,
                         }

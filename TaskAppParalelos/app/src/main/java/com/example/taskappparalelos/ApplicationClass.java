@@ -2,11 +2,14 @@ package com.example.taskappparalelos;
 
 import android.app.AlertDialog;
 import android.app.Application;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.example.taskappparalelos.view.TaskAssignedActivity;
+import com.example.taskappparalelos.viewmodel.TaskAssignedViewModel;
 import com.onesignal.OneSignal;
 
 public class ApplicationClass extends Application {
@@ -27,8 +30,27 @@ public class ApplicationClass extends Application {
         OneSignal.promptForPushNotifications();
 
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
-        OneSignal.setNotificationOpenedHandler(result ->
-                Log.d("OneSignal", "Notificación abierta: " + result.toString()));
+        OneSignal.setNotificationOpenedHandler(result ->{
+
+
+                Log.d("OneSignal", "Notificación abierta: " + result.toString());
+                    // Extraer la data adicional de la notificación
+                    String assignment = result.getNotification().getAdditionalData().optString("assignment");
+
+                    if (assignment != null) {
+//                        // Si la data adicional contiene el campo 'assignment', navega a la pantalla de AssignActivity
+                        Intent intent = new Intent(ApplicationClass.this, TaskAssignedActivity.class);
+
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+//                        TaskAssignedActivity ta = new TaskAssignedActivity();
+//                        ta.fetchData();
+                    } else {
+                        Log.d("OneSignal", "No se encontró la asignación en la notificación.");
+                    }
+
+            }
+                );
 
 
         // Esperar hasta que OneSignal obtenga el playerId y guardarlo en SharedPreferences

@@ -57,13 +57,13 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(String s) {
                 tvLoginResult.setText(s);
 
-                if(s == "Login Success"){
+                if ("Login Success".equals(s)) {
                     Intent intent = new Intent(MainActivity.this, HomeActivity.class);
 
-                    // Agregar datos al intent (opcional)
-                    intent.putExtra("username", "Edwin Espinal");
+                    // Obtener el username desde SharedPreferences
+                    String username = mViewModel.getSavedUsername();
 
-                    // Iniciar TaskActivity
+                    intent.putExtra("username", username);
                     startActivity(intent);
                 }
             }
